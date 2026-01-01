@@ -6,3 +6,4 @@ blogs/
 *.egg-info/
 *.env
 *.db.lock
+publicate.md

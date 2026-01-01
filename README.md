@@ -5,7 +5,7 @@ Thread safe, monotonic, customizable, eazy to use SnowFlake ID generator.
 ## Installation
 
 ```bash
-pip install snowlance-0.1.0-py3-none-any.whl
+pip install snowlance
 ```
 
 ## Usage
