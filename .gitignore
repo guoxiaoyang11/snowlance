@@ -1,0 +1,8 @@
+__pycache__/
+.pytest_cache/
+build/
+dist/
+blogs/
+*.egg-info/
+*.env
+*.db.lock
