@@ -49,8 +49,8 @@ class SnowLance:
 
         # thread states
         self.lock = threading.Lock()
-        self.last_seq = 0
-        self.last_t = None
+        self.last_seq = {}
+        self.last_t = {}
 
     @property
     def epoch(self):
@@ -130,7 +130,16 @@ class SnowLance:
         """
         Generate a SnowFlake ID
         """
-        return self.encode(self._since_epoch, instance, seq)
+        t = self._since_epoch and instance in self.last_seq
+        with self.lock:
+            if t == self.last_t and instance in self.last_seq and self.last_seq[instance] >= seq:
+                    raise ValueError(
+                        f"Seq number {seq} not greater than last seq number {self.last_seq} for the same timestamp {t}"
+                    )
+            
+            self.last_t = t
+            self.last_seq[instance] = seq
+            return self.encode(self._since_epoch, instance, seq)
 
     def auto(self, instance: int = 0) -> SnowFlake:
         """
@@ -139,9 +148,9 @@ class SnowLance:
         """
         t = self._since_epoch
         with self.lock:
-            if t == self.last_t:
-                self.last_seq += 1
+            if t == self.last_t and instance in self.last_seq:
+                self.last_seq[instance] += 1
             else:
                 self.last_t = t
-                self.last_seq = 0
-            return self.encode(self.last_t, instance, self.last_seq)
+                self.last_seq[instance] = 0
+            return self.encode(self.last_t, instance, self.last_seq[instance])

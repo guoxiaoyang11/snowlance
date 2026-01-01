@@ -1,7 +1,4 @@
 from snowlance import SnowLance, SnowFlake
 
-lance = SnowLance(
-    resolution="ns"
-)
-
-print(lance.time_left)
+lance = SnowLance() 
+print(lance.encode(60176267, 0, 1))
